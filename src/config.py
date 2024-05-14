@@ -1,5 +1,4 @@
 from configparser import ConfigParser
-import os.path
 import os
 
 # подключение к токену бота через модуль os (токен в переменных среды)
@@ -10,9 +9,7 @@ TOKEN_FOR_DANCE_BOT = os.getenv('TOKEN_FOR_DANCE_BOT')
 def config(filename="database.ini", section="postgresql"):
     parser = ConfigParser()
 
-    path_to_file = os.path.join("..", filename)
-
-    parser.read(path_to_file)
+    parser.read(filename)
     db = {}
     if parser.has_section(section):
         params = parser.items(section)
