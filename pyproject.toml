@@ -13,6 +13,7 @@ telegram = "^0.0.1"
 psycopg2 = "^2.9.9"
 schedule = "^1.2.1"
 pytest = "^8.2.0"
+pytelegrambotapi = "^4.18.0"
 
 
 [build-system]

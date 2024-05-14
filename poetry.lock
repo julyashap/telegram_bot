@@ -269,13 +269,13 @@ files = [
 
 [[package]]
 name = "pytelegrambotapi"
-version = "4.17.0"
+version = "4.18.0"
 description = "Python Telegram bot api."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "pytelegrambotapi-4.17.0-py3-none-any.whl", hash = "sha256:326b51fdaa4f5dcb1e12d326beb9d9aa1289ffb578110b17d5ea269971a39160"},
-    {file = "pytelegrambotapi-4.17.0.tar.gz", hash = "sha256:8cfda15e64a12fe73b78545ccc7b59e035d7fb3e54da5722ddf756296f3b8159"},
+    {file = "pytelegrambotapi-4.18.0-py3-none-any.whl", hash = "sha256:88a980ed75f3ea611c97fcb375fc787fc6ef4f1e2f61ae59a14d7377058376a1"},
+    {file = "pytelegrambotapi-4.18.0.tar.gz", hash = "sha256:a8a18c1fe847d1dc2622279d21ec591e47e0c067278eeb2275c759dfbc9522d5"},
 ]
 
 [package.dependencies]
@@ -426,4 +426,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "32b32702a1160c440bed83966e60f36e9a3378e84751ccbffdc836acee33e9cb"
+content-hash = "9556b9e3328b7a1c766eb5ceab2084992269a129fee8314c14b11b992f9f67ca"
