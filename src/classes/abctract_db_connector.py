@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from src.classes.student import Student
 
 
 class AbstractDBConnector(ABC):
@@ -8,13 +7,13 @@ class AbstractDBConnector(ABC):
         pass
 
     @abstractmethod
-    def get_data(self, data: str, table_name: str) -> list[tuple]:
+    def get_data(self, query: str) -> list[tuple]:
         pass
 
     @abstractmethod
-    def insert_student(self, student: Student) -> None:
+    def insert_student(self, student: dict) -> None:
         pass
 
     @abstractmethod
-    def delete_student(self, student: Student) -> None:
+    def delete_student(self, registration_id: int) -> None:
         pass
