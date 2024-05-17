@@ -36,7 +36,7 @@ def test_insert_student(db_connector):
 
     student_ids = [student_id[0] for student_id in db_connector.get_data('select student_id from registrations')]
 
-    assert student['id'] in student_ids
+    assert str(student['id']) in student_ids
 
 
 def test_delete_student(db_connector):
@@ -55,4 +55,4 @@ def test_update_code(db_connector):
 
     data = db_connector.get_data(f'select chat_id from leaders where leader_id = {supervisor_id}')[0][0]
 
-    assert data == chat_id
+    assert data == str(chat_id)
