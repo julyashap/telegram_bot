@@ -470,5 +470,8 @@ def thank_you_handler(message):
 # запуск бота
 bot.polling(none_stop=True, interval=0)
 
+db_connector_students.cur.close()
+db_connector_students.conn.close()
+
 db_connector.cur.close()
 db_connector.conn.close()
