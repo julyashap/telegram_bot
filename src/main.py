@@ -61,7 +61,7 @@ def student_info_handler(message):
                                                       f'and student_group = \'{group}\'')
 
         if student_in_database:
-            student_data['id'] = message.chat.id
+            student_data['id'] = str(message.chat.id)
             student_data['last_name'] = last_name
             student_data['first_name'] = first_name
             student_data['patronymic'] = patronymic
@@ -74,7 +74,7 @@ def student_info_handler(message):
 
             user_states[message.chat.id] = None  # сброс состояния пользователя
         else:
-            bot.send_message(message.chat.id, "К сожалению, Вас нет в базе данных 😢")
+            bot.send_message(message.chat.id, "К сожалению, тебя нет в базе данных 😢")
 
 
 def question_two(message):
@@ -150,7 +150,7 @@ def supervisor_info_handler(message):
                                          f'from leaders where leader_code = \'{supervisor_info}\'')
 
     if leader_info:
-        db_connector.update_code(message.chat.id, leader_info[0][0])
+        db_connector.update_code(str(message.chat.id), leader_info[0][0])
         bot.send_message(message.chat.id, f"Отлично, {leader_info[0][1]}! Верификация пройдена! 💃")
 
         bot.send_message(message.chat.id, "<b>Список команд бота</b>\n\n"
@@ -293,7 +293,7 @@ def handle_teams(message):
 @bot.message_handler(commands=['cancel'])
 def handle_cancel(message):
     registrations_data = db_connector.get_data(f'select registration_id, team_name, registration_date '
-                                               f'from registrations where student_id = {message.chat.id}')
+                                               f'from registrations where student_id = \'{message.chat.id}\'')
 
     if registrations_data:
         markup = types.InlineKeyboardMarkup()
@@ -310,21 +310,21 @@ def handle_cancel(message):
 
 @bot.callback_query_handler(func=lambda call: call.data[:len('registration')] == 'registration')
 def cancel_handler(call):
-    registrations_data = db_connector.get_data(f'select registration_id, team_name, student_last_name, '
+    registrations_data = db_connector.get_data(f'select registration_id, student_last_name, '
                                                f'student_first_name, student_patronymic, student_group, '
                                                f'team_name, registration_date from registrations '
-                                               f'where student_id = {call.message.chat.id}')
+                                               f'where student_id = \'{call.message.chat.id}\'')
 
     for registration_data in registrations_data:
         if str(registration_data[0]) == call.data[len('registration'):]:
             db_connector.delete_student(registration_data[0])
             bot.send_message(call.message.chat.id, 'Готово! Отменили твою запись! 😉')
 
-            leader_chat_id = db_connector.get_data(f'select chat_id from leaders join teams using(leader_id) '
-                                                   f'where team_name = \'{registration_data[1]}\'')[0][0]
-            bot.send_message(leader_chat_id, f"<b>Отмена записи</b>\n\n{registration_data[2]} {registration_data[3]} "
-                                             f"{registration_data[4]} {registration_data[5]}\n"
-                                             f"{registration_data[6]} {str(registration_data[7])[:-3]}",
+            leader_chat_id = str(db_connector.get_data(f'select chat_id from leaders join teams using(leader_id) '
+                                                   f'where team_name = \'{registration_data[5]}\'')[0][0])
+            bot.send_message(leader_chat_id, f"<b>Отмена записи</b>\n\n{registration_data[1]} {registration_data[2]} "
+                                             f"{registration_data[3]} {registration_data[4]}\n"
+                                             f"{registration_data[5]} {str(registration_data[6])[:-3]}",
                              parse_mode='html')
             break
 
@@ -332,12 +332,12 @@ def cancel_handler(call):
 @bot.message_handler(commands=['otherStudents'])
 def hanle_other_students(message):
     student_parameters = db_connector.get_data(f'select team_name, registration_date '
-                                               f'from registrations where student_id = {message.chat.id}')
+                                               f'from registrations where student_id = \'{message.chat.id}\'')
     other_students = ""
     for student_parameter in student_parameters:
         other_students_info = db_connector.get_data(f'select student_first_name, student_last_name, student_group, '
                                                     f'team_name, registration_date from registrations where '
-                                                    f'student_id <> {message.chat.id} and team_name = '
+                                                    f'student_id <> \'{message.chat.id}\' and team_name = '
                                                     f'\'{student_parameter[0]}\' and registration_date = '
                                                     f'\'{student_parameter[1]}\'')
 
@@ -380,7 +380,7 @@ def handle_question(message):
 def handle_selections(message):
     selections = db_connector.get_data(f'select distinct team_name, registration_date, selection_location '
                                        f'from registrations '
-                                       f'where student_id = {message.chat.id}')
+                                       f'where student_id = \'{message.chat.id}\'')
 
     if selections:
         selections_info = ""
@@ -406,7 +406,7 @@ def handle_show_commands(message):
 @bot.message_handler(commands=['selectionSchedule'])
 def handle_selection_schedule(message):
     selections_data = db_connector.get_data(f'select distinct team_name, main_selection, reserve_selection from teams '
-                                            f'join leaders using(leader_id) where chat_id = {message.chat.id}')
+                                            f'join leaders using(leader_id) where chat_id = \'{message.chat.id}\'')
 
     if selections_data:
         selection_schedule = "<b>Расписание отборов</b>\n\n"
@@ -423,7 +423,7 @@ def handle_selection_schedule(message):
 @bot.message_handler(commands=['listStudents'])
 def handle_list_students(message):
     selections_data = db_connector.get_data(f'select distinct team_name from teams '
-                                            f'join leaders using(leader_id) where chat_id = {message.chat.id}')
+                                            f'join leaders using(leader_id) where chat_id = \'{message.chat.id}\'')
 
     if selections_data:
         markup = types.InlineKeyboardMarkup()
@@ -446,7 +446,7 @@ def list_students_handler(call):
                                                   f'registration_date, test_score '
                                                   f'from registrations r join teams using(team_id) '
                                                   f'join leaders using(leader_id) '
-                                                  f'where chat_id = {call.message.chat.id}')
+                                                  f'where chat_id = \'{call.message.chat.id}\'')
 
     list_students = ""
 
